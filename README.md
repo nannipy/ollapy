@@ -10,7 +10,7 @@
 Questo progetto è un'interfaccia web elegante e auto-contenuta per dialogare con i tuoi modelli linguistici locali tramite [Ollama](https://ollama.com/). È composto da un backend leggerissimo in Python/Flask e un frontend in puro JavaScript, senza framework pachidermici. Tutto ciò di cui hai bisogno, niente di superfluo.
 
  
-*(Nota: Un GIF animato qui sarebbe spettacolare per mostrare il flusso di lavoro!)*
+
 
 ---
 
