@@ -150,6 +150,7 @@ async function init() {
     ui.dom.form.addEventListener('submit', handleFormSubmit);
     ui.dom.newChatBtn.addEventListener('click', startNewChat);
     ui.dom.modelSelector.addEventListener('change', handleModelChange);
+    ui.dom.toggleSidebarBtn.addEventListener('click', ui.toggleSidebar);
 
     // Popola il selettore dei modelli
     try {
