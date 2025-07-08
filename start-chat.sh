@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # --- Configurazione ---
-HTML_FILE="chat.html" # Assicurati che il tuo file HTML si chiami così
+HTML_FILE="index.html" # Assicurati che il tuo file HTML si chiami così
 PORT=8000
 URL="http://localhost:$PORT/$HTML_FILE"
 

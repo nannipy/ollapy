@@ -1,7 +1,7 @@
 import os
 import json
-from flask import Flask, request, jsonify, send_from_directory
-from flask import Response
+from flask import Flask, request, jsonify, send_from_directory # type: ignore
+from flask import Response # type: ignore
 
 # Inizializza l'applicazione Flask
 app = Flask(__name__, static_url_path='', static_folder='.')
@@ -14,7 +14,7 @@ if not os.path.exists(LOGS_DIR):
 # API: Serve il file principale della chat
 @app.route('/')
 def index():
-    return send_from_directory('.', 'chat.html')
+    return send_from_directory('.', 'index.html')
 
 @app.route('/favicon.ico')
 def favicon():
