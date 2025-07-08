@@ -1,6 +1,10 @@
 
 ---
 
+<p align="center">
+    <img src="logo_ollapy.svg" alt="Ollapy Logo" width="180" style="border-radius: 15%;" />
+</p>
+
 # Localhost LLM Chat: La tua Chatroom AI Privata 🧠💬
 
 [![Python](https://img.shields.io/badge/Python-3.x-blue.svg)](https://www.python.org/) [![Flask](https://img.shields.io/badge/Flask-2.x-black.svg)](https://flask.palletsprojects.com/) [![JavaScript](https://img.shields.io/badge/JavaScript-ES6-yellow.svg)](https://developer.mozilla.org/it/docs/Web/JavaScript) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
@@ -8,6 +12,8 @@
 **Stanco di inviare i tuoi pensieri più reconditi a server di terze parti? Vuoi il potere di un LLM ma nella privacy della tua fortezza digitale (aka `localhost`)? Allora sei nel posto giusto.**
 
 Questo progetto è un'interfaccia web elegante e auto-contenuta per dialogare con i tuoi modelli linguistici locali tramite [Ollama](https://ollama.com/). È composto da un backend leggerissimo in Python/Flask e un frontend in puro JavaScript, senza framework pachidermici. Tutto ciò di cui hai bisogno, niente di superfluo.
+
+
 
  
 
