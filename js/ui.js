@@ -13,6 +13,8 @@ export const dom = {
     tokenProgressBarInner: document.getElementById('token-progress-bar-inner'),
     modelSelector: document.getElementById('model-selector'),
     modelNameSpan: document.getElementById('model-name-span'),
+    toggleSidebarBtn: document.getElementById('toggle-sidebar-btn'),
+    sidebarControls: document.querySelector('.sidebar-controls'),
 };
 
 
@@ -129,4 +131,8 @@ export function clearPromptInput() {
 
 export function scrollToBottom() {
     dom.chatLog.scrollTop = dom.chatLog.scrollHeight;
+}
+
+export function toggleSidebar() {
+    dom.sidebarControls.classList.toggle('collapsed');
 }
