@@ -53,11 +53,11 @@ Il sistema si regge su due pilastri fondamentali:
 
 ```mermaid
 graph TD
-    A[Utente 👨‍💻] -- Interagisce con --> B(Browser: chat.html);
-    B -- Richieste API (Salva/Carica) --> C(Backend Flask: server.py);
-    C -- Legge/Scrive --> D[File di Log (logs/*.json) 📝];
-    B -- Richieste LLM (Prompt) --> E(Server Ollama 🧠);
-    E -- Risposta in streaming --> B;
+    A[Utente 👨‍💻] -- Interagisce con --> B[Browser: chat.html]
+    B -- "Richieste API (Salva/Carica)" --> C[Backend Flask: server.py]
+    C -- "Legge/Scrive" --> D["File di Log<br/>(logs/*.json) 📝"]
+    B -- "Richieste LLM (Prompt)" --> E[Server Ollama 🧠]
+    E -- "Risposta in streaming" --> B
 ```
 
 ## 🚀 Pronti, Partenza, Via! (Installazione)
