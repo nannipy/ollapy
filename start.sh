@@ -21,13 +21,16 @@ if ! command -v python3 &> /dev/null; then
     exit 1
 fi
 
-if ! python3 -m pip show flask &> /dev/null; then
-    echo "Errore: Flask non è installato. Esegui 'pip install Flask' per installarlo."
-    exit 1
-fi
+echo "Installazione delle dipendenze da requirements.txt..."
+pip install -r requirements.txt
 
 if [ ! -f "$SERVER_FILE" ]; then
     echo "Errore: File '$SERVER_FILE' non trovato. Assicurati che sia in questa cartella."
+    exit 1
+fi
+
+if ! command -v ollama &> /dev/null; then
+    echo "Errore: ollama non trovato. Assicurati che sia installato e nel tuo PATH."
     exit 1
 fi
 
