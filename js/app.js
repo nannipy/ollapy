@@ -4,6 +4,8 @@ import * as api from './api.js';
 import * as state from './state.js';
 import * as ui from './ui.js';
 
+let currentAbortController = null; // Per gestire l'annullamento delle richieste
+
 // --- LOGICA DI BUSINESS E GESTIONE EVENTI ---
 
 async function loadChat(chatId) {
@@ -78,6 +80,9 @@ async function handleFormSubmit(event) {
     const aiMessageElement = ui.addMessageToLog('assistant', '<span class="cursor"></span>');
     let fullResponse = '';
 
+    // Inizializza un nuovo AbortController per ogni richiesta
+    currentAbortController = new AbortController();
+
     try {
         await api.streamOllamaResponse(
             state.getCurrentChat().history,
@@ -107,14 +112,22 @@ async function handleFormSubmit(event) {
                     lastTurn.responseTime = duration;
                 }
                 await api.saveChat(state.getCurrentChat());
-            }
+            },
+            currentAbortController.signal // Passa il segnale di annullamento
         );
     } catch (error) {
-        console.error('Errore chiamata a Ollama:', error);
-        aiMessageElement.style.color = '#ff8a80';
-        aiMessageElement.textContent = `Errore: ${error.message}. Assicurati che Ollama sia attivo.`;
+        if (error.name === 'AbortError') {
+            console.warn("Richiesta annullata dall'utente.");
+            aiMessageElement.textContent = 'Risposta annullata.';
+            aiMessageElement.style.color = 'var(--color-yellow)'; // Colore per annullato
+        } else {
+            console.error('Errore chiamata a Ollama:', error);
+            aiMessageElement.style.color = '#ff8a80';
+            aiMessageElement.textContent = `Errore: ${error.message}. Assicurati che Ollama sia attivo.`;
+        }
     } finally {
         ui.toggleLoading(false);
+        currentAbortController = null; // Resetta il controller
     }
 }
 
@@ -123,6 +136,12 @@ async function handleModelChange(event) {
     state.setCurrentModel(newModel);
     ui.updateChatTitle(newModel);
     await startNewChat();
+}
+
+function handleCancelClick() {
+    if (currentAbortController) {
+        currentAbortController.abort();
+    }
 }
 
 // --- FUNZIONI UTILITY INTERNE AD APP.JS ---
@@ -151,6 +170,7 @@ async function init() {
     ui.dom.newChatBtn.addEventListener('click', startNewChat);
     ui.dom.modelSelector.addEventListener('change', handleModelChange);
     ui.dom.toggleSidebarBtn.addEventListener('click', ui.toggleSidebar);
+    ui.dom.cancelButton.addEventListener('click', handleCancelClick); // Listener per il pulsante Annulla
 
     // Popola il selettore dei modelli
     try {

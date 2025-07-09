@@ -5,6 +5,7 @@ export const dom = {
     form: document.getElementById('chat-form'),
     promptInput: document.getElementById('prompt-input'),
     sendButton: document.getElementById('send-button'),
+    cancelButton: document.getElementById('cancel-button'),
     chatLog: document.getElementById('chat-log'),
     newChatBtn: document.getElementById('new-chat-btn'),
     chatHistoryList: document.getElementById('chat-history-list'),
@@ -115,6 +116,8 @@ export function updateTokenUI(tokenCount, maxTokens) {
 
 export function toggleLoading(isLoading) {
     dom.sendButton.disabled = isLoading;
+    dom.cancelButton.style.display = isLoading ? 'inline-block' : 'none';
+    dom.sendButton.style.display = isLoading ? 'none' : 'inline-block';
     dom.historySidebar.classList.toggle('sidebar-disabled', isLoading);
     if (!isLoading) {
         dom.promptInput.focus();
