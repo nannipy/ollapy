@@ -1,148 +1,114 @@
-
----
-
 <p align="center">
     <img src="logo_ollapy.svg" alt="Ollapy Logo" width="180" />
 </p>
 
-# OllaPy: Web Interface for Local LLMs
+# OllaPy: A Private, Self-Hosted Web Interface for Ollama
 
 [![Python](https://img.shields.io/badge/Python-3.x-blue.svg)](https://www.python.org/) [![Flask](https://img.shields.io/badge/Flask-2.x-black.svg)](https://flask.palletsprojects.com/) [![JavaScript](https://img.shields.io/badge/JavaScript-ES6-yellow.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
-**Tired of sending your deepest thoughts to third-party servers? Want the power of an LLM but within the privacy of your digital fortress (aka `localhost`)? Then you're in the right place.**
+OllaPy is a sleek, self-contained web interface for interacting with local language models through [Ollama](https://ollama.com/). It provides a private and secure environment for your conversations, running entirely on your local machine. With a lightweight Python/Flask backend and a vanilla JavaScript frontend, OllaPy is designed for simplicity, privacy, and hackability.
 
-This project is a sleek, self-contained web interface to chat with your local language models via [Ollama](https://ollama.com/). It consists of a super-lightweight Python/Flask backend and a pure JavaScript frontend, with no bloated frameworks. Everything you need, nothing you don't.
+## 📖 Table of Contents
 
-
-
- 
-
+- [Features](#-features)
+- [Architecture](#-architecture)
+- [Getting Started](#-getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation & Usage](#installation--usage)
+- [Configuration](#-configuration)
+- [API Endpoints](#-api-endpoints)
+- [Contributing](#-contributing)
 
 ---
 
-## 🤔 Why This and Not Another?
+## ✨ Features
 
-There are many interfaces for Ollama, but this one was built with a few core principles in mind:
+*   **🔒 Absolute Privacy:** All interactions happen on your local machine. No data is ever sent to third-party servers.
+*   **💾 Chat History:** Conversations are automatically saved as JSON files in a `logs` directory, allowing for easy access, backup, and management.
+*   **🤖 Model Selection:** Seamlessly switch between different Ollama models using a dropdown menu in the user interface.
+*   **✍️ Markdown Rendering:** Enjoy beautifully formatted AI responses, including lists, tables, and code blocks.
+*   **💨 Real-Time Streaming:** Experience interactive conversations with the AI's responses streamed in real-time.
+*   **📊 Token Counter:** Monitor the context size of your conversations with a progress bar and token counter.
+*   **⏱️ Performance Metrics:** Track the generation time for each AI response.
+*   **🛑 Cancel Responses:** Interrupt the AI's response generation at any time.
+*   **🛡️ Built-in Security:** Client-side HTML sanitization using `DOMPurify` to prevent XSS attacks.
 
-1.  **Absolute Privacy:** The only network request leaving your machine is to your local Ollama server. No data, no telemetry, no tracking cookies. Your `localhost`, your rules.
-2.  **Simple Persistence:** Your chats don't vanish into thin air. They're saved as simple `.json` files in a `logs/` directory, making them easy to inspect, back up, or even edit by hand (you tinkerer!).
-3.  **Zero Complex Dependencies:** No Node.js, no `npm install` with a billion packages. Just a simple Python server and an HTML file that works. It's so simple it's almost cute.
-4.  **Hackable by Design:** The code is intentionally clear and commented. Want to change the model? It's a variable. Want to tweak the style? It's a CSS block. Want to add a feature? The code won't bite you.
+## 🛠️ Architecture
 
-## ✨ Cool Features
+OllaPy's architecture is composed of two main components:
 
-*   **💾 Chat History:** All your conversations are saved and listed in a handy sidebar. Click to load them, click the `x` to delete.
-*   **✍️ Markdown Rendering:** The AI can format text with lists, tables, code blocks, and more, and the interface will render it beautifully.
-*   **💨 Real-Time Streaming:** Watch the AI's response appear word by word, with a little blinking cursor, as if it's thinking just for you.
-*   **📊 Token Counter:** Keep an eye on context size with a progress bar and counter, which changes color as you approach the limit.
-*   **⏱️ Performance Meter:** Each AI response shows how long it took to generate. Great for bragging about your GPU's power.
-*   **🛡️ Built-in Security:** HTML output is sanitized with `DOMPurify` to prevent XSS attacks. Because even on `localhost`, it's better to be safe.
-
-## 🛠️ How This Thing Works (Architecture)
-
-The system stands on two fundamental pillars:
-
-1.  **`server.py` (The Librarian):**
-    *   A super-lightweight **Flask** server.
-    *   Its only purpose is to serve the `chat.html` file and handle a minimal REST API for `create`, `read`, `update`, and `delete` (CRUD) chat log files. It never talks to the AI.
-
-2.  **`chat.html` (The Arena):**
-    *   A single file containing **HTML**, **CSS**, and **vanilla JavaScript**.
-    *   Communicates directly with your **Ollama** server (default `http://localhost:11434`).
-    *   Communicates with `server.py` to save and load chat sessions.
+1.  **`server.py` (Backend):** A lightweight Flask server that serves the main `index.html` file and provides a REST API for managing chat logs (CRUD operations).
+2.  **`index.html` & JavaScript modules (Frontend):** A vanilla JavaScript application that communicates directly with the Ollama server for AI interactions and with the Flask server for chat history management.
 
 ```mermaid
 graph TD
-    A[User 👨‍💻] -- Interacts with --> B[Browser: chat.html]
+    A[User 👨‍💻] -- Interacts with --> B[Browser: index.html]
     B -- "API Requests (Save/Load)" --> C[Backend Flask: server.py]
     C -- "Reads/Writes" --> D["Log Files<br/>(logs/*.json) 📝"]
     B -- "LLM Requests (Prompt)" --> E[Ollama Server 🧠]
     E -- "Streaming Response" --> B
 ```
 
-## 🚀 Ready, Set, Go! (Installation)
-
-Getting this little marvel up and running is a breeze.
+## 🚀 Getting Started
 
 ### Prerequisites
 
-1.  **Python 3** and `pip` installed.
-2.  **Ollama installed and running.** If you haven't already, follow the instructions at [ollama.com](https://ollama.com/).
-3.  **A downloaded model.** For example, to use `gemma3` (as set by default in the code):
+*   [Python 3](https://www.python.org/downloads/) and `pip`.
+*   [Ollama](https://ollama.com/) installed and running.
+*   At least one Ollama model downloaded (e.g., `ollama pull gemma3`).
+
+### Installation & Usage
+
+1.  **Clone the repository:**
+
     ```bash
-    ollama pull gemma3
+    git clone https://github.com/your-username/ollapy.git
+    cd ollapy
     ```
 
-### Installation
+2.  **Run the start script:**
 
-1.  **Clone this repository:**
+    The `start.sh` script automates the setup process, including installing dependencies and launching the necessary servers.
+
     ```bash
-    git clone https://github.com/your-username/localhost-llm-chat.git
-    cd localhost-llm-chat
+    ./start.sh
     ```
 
-2.  **Install Python dependencies (just Flask):**
-    ```bash
-    pip install Flask
-    # Or, if you provide a requirements.txt:
-    # pip install -r requirements.txt
-    ```
+    This will:
+    *   Install the required Python packages from `requirements.txt`.
+    *   Start the Ollama server in the background.
+    *   Start the Flask backend server.
+    *   Open the OllaPy web interface in your default browser.
 
-3.  **Start the backend server:**
-    ```bash
-    python server.py
-    ```
-    You should see a message telling you the server is running at `http://localhost:8000`.
+3.  **Start chatting!**
 
-4.  **Open your browser** and go to:
-    👉 **http://localhost:8000** 👈
+    You can now interact with your local language models through the OllaPy interface.
 
-Done! Now you can start chatting with your personal AI.
+## ⚙️ Configuration
 
-## ⚙️ Fine-Tuning (Configuration)
-
-Want to use a model other than `gemma3`? Or is your Ollama running on a different port? Open `chat.html` and edit these JavaScript constants at the top of the script:
+To customize the default settings, such as the default Ollama model or the Ollama server URL, you can modify the `js/config.js` file:
 
 ```javascript
-// --- CONFIGURATION ---
-const OLLAMA_MODEL = "mistral"; // Change to your preferred model
-const MAX_CONTEXT_WINDOW = 8192; // Adjust if your model has a different context size
+// js/config.js
+export const DEFAULT_OLLAMA_MODEL = "gemma3"; // Set your preferred default model
+export const OLLAMA_BASE_URL = "http://localhost:11434"; // Modify if your Ollama server runs on a different URL
 ```
 
-Remember to run `ollama pull model-name` for every new model you want to use!
+## 🤓 API Endpoints
 
-## 🤓 API Endpoints (For Power Users)
+The Flask backend exposes a simple REST API for managing chat logs:
 
-The `server.py` server exposes a simple REST API for managing chats. You could use it to integrate the chat history with other scripts.
+*   `GET /api/chats`: Retrieves a list of all saved chats.
+*   `GET /api/chats/<chat_id>`: Retrieves the content of a specific chat.
+*   `POST /api/chats`: Saves or updates a chat.
+*   `DELETE /api/chats/<chat_id>`: Deletes a specific chat.
 
-*   `GET /api/chats`
-    *   **Response:** A JSON array listing all saved chats, ordered from newest to oldest. `{ "id": "...", "title": "..." }`
+## 🤝 Contributing
 
-*   `GET /api/chats/<chat_id>`
-    *   **Response:** The full JSON content of the specified chat.
+Contributions are welcome! If you have any ideas for improvements or new features, feel free to fork the repository, make your changes, and submit a pull request.
 
-*   `POST /api/chats`
-    *   **Body:** The full JSON object of the chat to save/update.
-    *   **Response:** Confirmation of save.
+Some ideas for contributions include:
 
-*   `DELETE /api/chats/<chat_id>`
-    *   **Response:** Confirmation of deletion.
-
-## 🤝 Want to Help? (Contributing)
-
-This project was made to be simple, but there's always room for improvement! Pull Requests are more than welcome. Got a brilliant idea? Found a bug more annoying than a mosquito in your bedroom?
-
-1.  Fork the repository.
-2.  Create a new branch (`git checkout -b feature/your-crazy-idea`).
-3.  Make your changes.
-4.  Submit a Pull Request.
-
-Some ideas to get started:
-*   A selector to change models directly from the interface.
-*   Themes (light/dark/cyberpunk?).
-*   Export a single chat as Markdown or PDF.
-
----
-
-**Happy Hacking, and may your `localhost` always be fast and responsive!**
-
+*   Implementing a more advanced chat history with folders and search functionality.
+*   Adding support for different themes (e.g., light, dark, cyberpunk).
+*   Adding the ability to export chats as Markdown or PDF files.
