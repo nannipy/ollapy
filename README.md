@@ -2,16 +2,16 @@
 ---
 
 <p align="center">
-    <img src="logo_ollapy.svg" alt="Ollapy Logo" width="180" style="border-radius: 15%;" />
+    <img src="logo_ollapy.svg" alt="Ollapy Logo" width="180" />
 </p>
 
-# Localhost LLM Chat: La tua Chatroom AI Privata 🧠💬
+# OllaPy: Web Interface for Local LLMs
 
-[![Python](https://img.shields.io/badge/Python-3.x-blue.svg)](https://www.python.org/) [![Flask](https://img.shields.io/badge/Flask-2.x-black.svg)](https://flask.palletsprojects.com/) [![JavaScript](https://img.shields.io/badge/JavaScript-ES6-yellow.svg)](https://developer.mozilla.org/it/docs/Web/JavaScript) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![Python](https://img.shields.io/badge/Python-3.x-blue.svg)](https://www.python.org/) [![Flask](https://img.shields.io/badge/Flask-2.x-black.svg)](https://flask.palletsprojects.com/) [![JavaScript](https://img.shields.io/badge/JavaScript-ES6-yellow.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
-**Stanco di inviare i tuoi pensieri più reconditi a server di terze parti? Vuoi il potere di un LLM ma nella privacy della tua fortezza digitale (aka `localhost`)? Allora sei nel posto giusto.**
+**Tired of sending your deepest thoughts to third-party servers? Want the power of an LLM but within the privacy of your digital fortress (aka `localhost`)? Then you're in the right place.**
 
-Questo progetto è un'interfaccia web elegante e auto-contenuta per dialogare con i tuoi modelli linguistici locali tramite [Ollama](https://ollama.com/). È composto da un backend leggerissimo in Python/Flask e un frontend in puro JavaScript, senza framework pachidermici. Tutto ciò di cui hai bisogno, niente di superfluo.
+This project is a sleek, self-contained web interface to chat with your local language models via [Ollama](https://ollama.com/). It consists of a super-lightweight Python/Flask backend and a pure JavaScript frontend, with no bloated frameworks. Everything you need, nothing you don't.
 
 
 
@@ -20,128 +20,129 @@ Questo progetto è un'interfaccia web elegante e auto-contenuta per dialogare co
 
 ---
 
-## 🤔 Perché questo e non un altro?
+## 🤔 Why This and Not Another?
 
-Ci sono tante interfacce per Ollama, ma questa è stata costruita con alcuni dogmi in mente:
+There are many interfaces for Ollama, but this one was built with a few core principles in mind:
 
-1.  **Privacy Assoluta:** L'unica richiesta di rete che esce dalla tua macchina è quella verso il tuo server Ollama locale. Nessun dato, nessuna telemetria, nessun cookie di profilazione. Il tuo `localhost`, le tue regole.
-2.  **Persistenza Semplice:** Le tue chat non svaniscono nel nulla. Vengono salvate come semplici file `.json` in una directory `logs/`, rendendole facili da ispezionare, backuppare o persino modificare a mano (smanettone che non sei altro!).
-3.  **Zero Dipendenze Complesse:** Niente Node.js, niente `npm install` da un miliardo di pacchetti. Solo un semplice server Python e un file HTML che funziona. È così semplice che fa quasi tenerezza.
-4.  **Hackable by Design:** Il codice è volutamente chiaro e commentato. Vuoi cambiare il modello? È una variabile. Vuoi modificare lo stile? È un blocco CSS. Vuoi aggiungere una feature? Il codice non ti morderà.
+1.  **Absolute Privacy:** The only network request leaving your machine is to your local Ollama server. No data, no telemetry, no tracking cookies. Your `localhost`, your rules.
+2.  **Simple Persistence:** Your chats don't vanish into thin air. They're saved as simple `.json` files in a `logs/` directory, making them easy to inspect, back up, or even edit by hand (you tinkerer!).
+3.  **Zero Complex Dependencies:** No Node.js, no `npm install` with a billion packages. Just a simple Python server and an HTML file that works. It's so simple it's almost cute.
+4.  **Hackable by Design:** The code is intentionally clear and commented. Want to change the model? It's a variable. Want to tweak the style? It's a CSS block. Want to add a feature? The code won't bite you.
 
-## ✨ Caratteristiche Fighe
+## ✨ Cool Features
 
-*   **💾 Cronologia Chat:** Tutte le tue conversazioni sono salvate e listate in una comoda barra laterale. Clicca per caricarle, clicca sulla `x` per eliminarle.
-*   **✍️ Rendering Markdown:** L'AI può formattare il testo con liste, tabelle, blocchi di codice e altro, e l'interfaccia lo renderà splendidamente.
-*   **💨 Streaming in Tempo Reale:** Vedi la risposta dell'AI apparire parola per parola, con un piccolo cursore lampeggiante, come se stesse pensando proprio per te.
-*   **📊 Contatore di Token:** Tieni d'occhio la dimensione del contesto con una barra di avanzamento e un contatore, che cambia colore man mano che ti avvicini al limite.
-*   **⏱️ Misuratore di Performance:** Ogni risposta dell'AI mostra quanto tempo ha impiegato per essere generata. Utile per vantarsi della potenza della tua GPU.
-*   **🛡️ Sicurezza Integrata:** L'output HTML viene sanificato con `DOMPurify` per prevenire attacchi XSS. Perché anche su `localhost` è meglio essere prudenti.
+*   **💾 Chat History:** All your conversations are saved and listed in a handy sidebar. Click to load them, click the `x` to delete.
+*   **✍️ Markdown Rendering:** The AI can format text with lists, tables, code blocks, and more, and the interface will render it beautifully.
+*   **💨 Real-Time Streaming:** Watch the AI's response appear word by word, with a little blinking cursor, as if it's thinking just for you.
+*   **📊 Token Counter:** Keep an eye on context size with a progress bar and counter, which changes color as you approach the limit.
+*   **⏱️ Performance Meter:** Each AI response shows how long it took to generate. Great for bragging about your GPU's power.
+*   **🛡️ Built-in Security:** HTML output is sanitized with `DOMPurify` to prevent XSS attacks. Because even on `localhost`, it's better to be safe.
 
-## 🛠️ L'Architettura di questo Aggeggio
+## 🛠️ How This Thing Works (Architecture)
 
-Il sistema si regge su due pilastri fondamentali:
+The system stands on two fundamental pillars:
 
-1.  **`server.py` (Il Bibliotecario):**
-    *   Un server **Flask** leggerissimo.
-    *   Il suo unico scopo è servire il file `chat.html` e gestire un'API REST minimale per `creare`, `leggere`, `aggiornare` ed `eliminare` (CRUD) i file di log della chat. Non parla mai con l'AI.
+1.  **`server.py` (The Librarian):**
+    *   A super-lightweight **Flask** server.
+    *   Its only purpose is to serve the `chat.html` file and handle a minimal REST API for `create`, `read`, `update`, and `delete` (CRUD) chat log files. It never talks to the AI.
 
-2.  **`chat.html` (L'Arena):**
-    *   Un unico file che contiene **HTML**, **CSS** e **JavaScript (vanilla)**.
-    *   Comunica direttamente con il tuo server **Ollama** (di default `http://localhost:11434`).
-    *   Comunica con `server.py` per salvare e caricare le sessioni di chat.
+2.  **`chat.html` (The Arena):**
+    *   A single file containing **HTML**, **CSS**, and **vanilla JavaScript**.
+    *   Communicates directly with your **Ollama** server (default `http://localhost:11434`).
+    *   Communicates with `server.py` to save and load chat sessions.
 
 ```mermaid
 graph TD
-    A[Utente 👨‍💻] -- Interagisce con --> B[Browser: chat.html]
-    B -- "Richieste API (Salva/Carica)" --> C[Backend Flask: server.py]
-    C -- "Legge/Scrive" --> D["File di Log<br/>(logs/*.json) 📝"]
-    B -- "Richieste LLM (Prompt)" --> E[Server Ollama 🧠]
-    E -- "Risposta in streaming" --> B
+    A[User 👨‍💻] -- Interacts with --> B[Browser: chat.html]
+    B -- "API Requests (Save/Load)" --> C[Backend Flask: server.py]
+    C -- "Reads/Writes" --> D["Log Files<br/>(logs/*.json) 📝"]
+    B -- "LLM Requests (Prompt)" --> E[Ollama Server 🧠]
+    E -- "Streaming Response" --> B
 ```
 
-## 🚀 Pronti, Partenza, Via! (Installazione)
+## 🚀 Ready, Set, Go! (Installation)
 
-Mettere in funzione questa piccola meraviglia è un gioco da ragazzi.
+Getting this little marvel up and running is a breeze.
 
-### Prerequisiti
+### Prerequisites
 
-1.  **Python 3** e `pip` installati.
-2.  **Ollama installato e in esecuzione.** Se non l'hai già fatto, segui le istruzioni su [ollama.com](https://ollama.com/).
-3.  **Un modello scaricato.** Per esempio, per usare `gemma3` (come da default nel codice):
+1.  **Python 3** and `pip` installed.
+2.  **Ollama installed and running.** If you haven't already, follow the instructions at [ollama.com](https://ollama.com/).
+3.  **A downloaded model.** For example, to use `gemma3` (as set by default in the code):
     ```bash
     ollama pull gemma3
     ```
 
-### Installazione
+### Installation
 
-1.  **Clona questo repository:**
+1.  **Clone this repository:**
     ```bash
-    git clone https://github.com/tuo-username/localhost-llm-chat.git
+    git clone https://github.com/your-username/localhost-llm-chat.git
     cd localhost-llm-chat
     ```
 
-2.  **Installa le dipendenze Python (solo Flask):**
+2.  **Install Python dependencies (just Flask):**
     ```bash
     pip install Flask
-    # Oppure, se fornisci un file requirements.txt:
+    # Or, if you provide a requirements.txt:
     # pip install -r requirements.txt
     ```
 
-3.  **Avvia il server backend:**
+3.  **Start the backend server:**
     ```bash
     python server.py
     ```
-    Dovresti vedere un messaggio che ti informa che il server è in esecuzione su `http://localhost:8000`.
+    You should see a message telling you the server is running at `http://localhost:8000`.
 
-4.  **Apri il tuo browser** e naviga su:
+4.  **Open your browser** and go to:
     👉 **http://localhost:8000** 👈
 
-Fatto! Ora puoi iniziare a chattare con la tua AI personale.
+Done! Now you can start chatting with your personal AI.
 
-## ⚙️ Metti a punto i Motori (Configurazione)
+## ⚙️ Fine-Tuning (Configuration)
 
-Vuoi usare un modello diverso da `gemma3`? O il tuo Ollama gira su una porta diversa? Apri `chat.html` e modifica queste costanti JavaScript all'inizio dello script:
+Want to use a model other than `gemma3`? Or is your Ollama running on a different port? Open `chat.html` and edit these JavaScript constants at the top of the script:
 
 ```javascript
-// --- CONFIGURAZIONE ---
-const OLLAMA_MODEL = "mistral"; // Cambia qui il tuo modello preferito
-const MAX_CONTEXT_WINDOW = 8192; // Modifica se il tuo modello ha un contesto diverso
+// --- CONFIGURATION ---
+const OLLAMA_MODEL = "mistral"; // Change to your preferred model
+const MAX_CONTEXT_WINDOW = 8192; // Adjust if your model has a different context size
 ```
 
-Ricorda di fare `ollama pull nome-modello` per ogni nuovo modello che vuoi usare!
+Remember to run `ollama pull model-name` for every new model you want to use!
 
-## 🤓 API Endpoints (Per gli Smanettoni)
+## 🤓 API Endpoints (For Power Users)
 
-Il server `server.py` espone una semplice API REST per la gestione delle chat. Potresti usarla per integrare la cronologia con altri script.
+The `server.py` server exposes a simple REST API for managing chats. You could use it to integrate the chat history with other scripts.
 
 *   `GET /api/chats`
-    *   **Risposta:** Un array JSON con la lista di tutte le chat salvate, ordinate dalla più recente alla più vecchia. `{ "id": "...", "title": "..." }`
+    *   **Response:** A JSON array listing all saved chats, ordered from newest to oldest. `{ "id": "...", "title": "..." }`
 
 *   `GET /api/chats/<chat_id>`
-    *   **Risposta:** Il contenuto JSON completo della chat specificata.
+    *   **Response:** The full JSON content of the specified chat.
 
 *   `POST /api/chats`
-    *   **Body:** L'oggetto JSON completo della chat da salvare/aggiornare.
-    *   **Risposta:** Conferma del salvataggio.
+    *   **Body:** The full JSON object of the chat to save/update.
+    *   **Response:** Confirmation of save.
 
 *   `DELETE /api/chats/<chat_id>`
-    *   **Risposta:** Conferma dell'eliminazione.
+    *   **Response:** Confirmation of deletion.
 
-## 🤝 Vuoi dare una mano? (Contributing)
+## 🤝 Want to Help? (Contributing)
 
-Questo progetto è nato per essere semplice, ma può sempre migliorare! Le Pull Request sono più che benvenute. Hai un'idea geniale? Hai scovato un bug più fastidioso di una zanzara in camera da letto?
+This project was made to be simple, but there's always room for improvement! Pull Requests are more than welcome. Got a brilliant idea? Found a bug more annoying than a mosquito in your bedroom?
 
-1.  Forka il repository.
-2.  Crea un nuovo branch (`git checkout -b feature/la-tua-idea-pazzesca`).
-3.  Fai le tue modifiche.
-4.  Invia una Pull Request.
+1.  Fork the repository.
+2.  Create a new branch (`git checkout -b feature/your-crazy-idea`).
+3.  Make your changes.
+4.  Submit a Pull Request.
 
-Qualche idea per iniziare:
-*   Un selettore per cambiare modello direttamente dall'interfaccia.
-*   Temi (chiaro/scuro/cyberpunk?).
-*   Esportazione di una singola chat in formato Markdown o PDF.
+Some ideas to get started:
+*   A selector to change models directly from the interface.
+*   Themes (light/dark/cyberpunk?).
+*   Export a single chat as Markdown or PDF.
 
 ---
 
-**Happy Hacking e che il tuo `localhost` sia sempre veloce e reattivo!**
+**Happy Hacking, and may your `localhost` always be fast and responsive!**
+
