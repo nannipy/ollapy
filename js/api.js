@@ -35,11 +35,12 @@ export async function getOllamaTags() {
 }
 
 // MODIFICATA: La funzione ora accetta il modello come argomento
-export async function streamOllamaResponse(history, model, onChunk, onDone) {
+export async function streamOllamaResponse(history, model, onChunk, onDone, signal) {
     const response = await fetch(`${OLLAMA_BASE_URL}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ model: model, messages: history, stream: true }),
+        signal: signal,
     });
 
     if (!response.ok) {
