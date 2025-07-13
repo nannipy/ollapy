@@ -23,6 +23,7 @@ OllaPy is a sleek, self-contained web interface for interacting with local langu
 
 ## ✨ Features
 
+*   **💻 Desktop Application:** OllaPy can now be run as a standalone desktop application using Electron, providing a native-like experience.
 *   **🔒 Absolute Privacy:** All interactions happen on your local machine. No data is ever sent to third-party servers.
 *   **💾 Chat History:** Conversations are automatically saved as JSON files in a `logs` directory, allowing for easy access, backup, and management.
 *   **🤖 Model Selection:** Seamlessly switch between different Ollama models using a dropdown menu in the user interface.
@@ -30,6 +31,8 @@ OllaPy is a sleek, self-contained web interface for interacting with local langu
 *   **💨 Real-Time Streaming:** Experience interactive conversations with the AI's responses streamed in real-time.
 *   **📊 Token Counter:** Monitor the context size of your conversations with a progress bar and token counter.
 *   **⏱️ Performance Metrics:** Track the generation time for each AI response.
+*   **📈 System Monitoring:** Real-time display of CPU and RAM usage within the Electron application.
+*   **🚀 Integrated Backend Startup:** The Electron application now automatically manages the startup and shutdown of the Flask backend server.
 *   **🛑 Cancel Responses:** Interrupt the AI's response generation at any time.
 *   **🛡️ Built-in Security:** Client-side HTML sanitization using `DOMPurify` to prevent XSS attacks.
 
@@ -83,6 +86,28 @@ graph TD
 3.  **Start chatting!**
 
     You can now interact with your local language models through the OllaPy interface.
+
+### Desktop Application (Electron)
+
+OllaPy can also be run as a desktop application using Electron, providing a native-like experience.
+
+1.  **Install Node.js dependencies:**
+
+    ```bash
+    npm install
+    ```
+
+2.  **Start the Electron application:**
+
+    ```bash
+    npm start
+    ```
+
+    This will launch the OllaPy desktop application. Ensure your Ollama server is running in the background.
+
+    **Note:** The Electron application currently expects the Flask backend to be running separately. You can start it using `./start.sh` (which also starts Ollama) or by manually running `python server.py` in a separate terminal.
+
+
 
 ## ⚙️ Configuration
 
