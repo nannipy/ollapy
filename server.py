@@ -4,7 +4,16 @@ from flask import Flask, request, jsonify, send_from_directory # type: ignore
 from flask import Response # type: ignore
 
 # Inizializza l'applicazione Flask
-app = Flask(__name__, static_url_path='', static_folder='.')
+app = Flask(__name__)
+
+# Add routes for static assets
+@app.route('/css/<path:filename>')
+def serve_css(filename):
+    return send_from_directory(os.path.join(app.root_path, 'css'), filename)
+
+@app.route('/js/<path:filename>')
+def serve_js(filename):
+    return send_from_directory(os.path.join(app.root_path, 'js'), filename)
 
 # Crea la directory dei log se non esiste
 LOGS_DIR = 'logs'
@@ -80,6 +89,6 @@ def delete_chat(chat_id):
 
 # Avvia il server
 if __name__ == '__main__':
-    print("Avvio del server Flask su http://localhost:8000")
+    print("Avvio del server Flask su http://localhost:8001")
     print("Questo server gestisce l'interfaccia e salva/carica le chat.")
-    app.run(host='0.0.0.0', port=8000)
+    app.run(host='0.0.0.0', port=8001)

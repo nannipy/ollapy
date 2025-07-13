@@ -1,4 +1,5 @@
 // js/app.js
+console.log("APP.JS LOADED");
 import * as config from './config.js';
 import * as api from './api.js';
 import * as state from './state.js';
@@ -135,6 +136,7 @@ async function handleModelChange(event) {
     const newModel = event.target.value;
     state.setCurrentModel(newModel);
     ui.updateChatTitle(newModel);
+    updateTotalTokenCount(); // Aggiorna il contatore quando il modello cambia
     await startNewChat();
 }
 
@@ -151,7 +153,9 @@ function estimateTokens(text) { return Math.ceil(text.length / 4); }
 function updateTotalTokenCount() {
     const fullText = state.getCurrentChat().history.map(turn => turn.content).join(' ');
     const tokenCount = estimateTokens(fullText);
-    ui.updateTokenUI(tokenCount, config.MAX_CONTEXT_WINDOW);
+    const maxTokens = state.getContextWindowForModel(state.getCurrentModel()) || config.MAX_CONTEXT_WINDOW; // Usa il valore dinamico o il default
+    console.log(`Token Count: ${tokenCount}, Max Tokens: ${maxTokens}, Current Model: ${state.getCurrentModel()}`);
+    ui.updateTokenUI(tokenCount, maxTokens);
 }
 
 async function refreshHistoryList() {
@@ -175,7 +179,9 @@ async function init() {
     // Popola il selettore dei modelli
     try {
         const models = await api.getOllamaTags();
-        ui.populateModelSelector(models, state.getCurrentModel());
+        console.log("Models received from Ollama API:", JSON.stringify(models, null, 2));
+        state.setModelContextWindows(models); // Salva le finestre di contesto
+        ui.populateModelSelector(models.map(m => m.name), state.getCurrentModel()); // Popola il selettore con i nomi
     } catch (error) {
         console.error("Impossibile caricare i modelli da Ollama:", error);
         ui.populateModelSelector([state.getCurrentModel()], state.getCurrentModel());
@@ -188,3 +194,10 @@ async function init() {
 
 // Esegui l'inizializzazione solo quando il DOM è pronto.
 document.addEventListener('DOMContentLoaded', init);
+
+    // Ascolta gli eventi di sistema dal processo principale
+    if (window.electronAPI) {
+        window.electronAPI.onSystemInfo((info) => {
+            ui.updateSystemInfoUI(info.cpu, info.ram);
+        });
+    }

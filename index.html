@@ -41,9 +41,14 @@
             </header>
             <div id="chat-log"></div>
             <div class="chat-input-area">
-                <div class="token-counter-container">
-                    <div class="token-progress-bar"><div id="token-progress-bar-inner"></div></div>
-                    <span id="token-count-text">0 / 8,192 tokens</span>
+                <div class="metrics-container">
+                    <div class="token-counter-container">
+                        <div class="token-progress-bar"><div id="token-progress-bar-inner"></div></div>
+                        <span id="token-count-text">0 / 8,192 tokens</span>
+                    </div>
+                    <div class="system-info-container">
+                        <span id="cpu-usage-text">CPU: 0.00%</span>
+                    </div>
                 </div>
                 <form id="chat-form">
                     <input type="text" id="prompt-input" placeholder="Scrivi il tuo messaggio..." autocomplete="off">

@@ -6,8 +6,8 @@ const LOCAL_STORAGE_KEY = 'ollama-chat-model';
 let state = {
     activeChatId: null,
     currentChat: { id: null, title: '', history: [] },
-    // NUOVA PARTE DELLO STATO
     currentModel: localStorage.getItem(LOCAL_STORAGE_KEY) || DEFAULT_OLLAMA_MODEL,
+    modelContextWindows: {}, // Nuovo: Mappa dei modelli con le loro finestre di contesto
 };
 
 
@@ -46,4 +46,17 @@ export function getCurrentModel() {
 export function setCurrentModel(modelName) {
     state.currentModel = modelName;
     localStorage.setItem(LOCAL_STORAGE_KEY, modelName);
+}
+
+// NUOVE FUNZIONI PER GESTIRE LE FINESTRE DI CONTESTO DEI MODELLI
+export function setModelContextWindows(models) {
+    state.modelContextWindows = models.reduce((acc, model) => {
+        acc[model.name] = model.context_window;
+        return acc;
+    }, {});
+    console.log("Updated modelContextWindows:", JSON.stringify(state.modelContextWindows, null, 2));
+}
+
+export function getContextWindowForModel(modelName) {
+    return state.modelContextWindows[modelName];
 }

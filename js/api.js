@@ -28,10 +28,41 @@ export async function deleteChat(id) {
 export async function getOllamaTags() {
     const response = await fetch(`${OLLAMA_BASE_URL}/api/tags`);
     if (!response.ok) {
-        throw new Error("Impossibile contattare il server Ollama per ottenere i modelli.");
+        console.error(`Ollama API Error: Status ${response.status}, Text: ${response.statusText}`);
+        throw new Error(`Impossibile contattare il server Ollama per ottenere i modelli. Status: ${response.status}, Testo: ${response.statusText}`);
     }
     const data = await response.json();
-    return data.models.map(model => model.name);
+    
+    const modelsWithContext = await Promise.all(data.models.map(async (model) => {
+        try {
+            const showResponse = await fetch(`${OLLAMA_BASE_URL}/api/show`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: model.name }),
+            });
+            if (!showResponse.ok) {
+                console.warn(`Impossibile ottenere dettagli per il modello ${model.name}: ${showResponse.statusText}`);
+                return { name: model.name, context_window: 4096 }; // Fallback
+            }
+            const showData = await showResponse.json();
+            let contextWindow = 4096; // Default fallback
+            
+            // Check model_info for context_length or num_ctx
+            if (showData.model_info) {
+                for (const key in showData.model_info) {
+                    if (key.includes('context_length') || key.includes('num_ctx')) {
+                        contextWindow = showData.model_info[key];
+                        break; // Found it, no need to check further
+                    }
+                }
+            }
+            return { name: model.name, context_window: contextWindow };
+        } catch (error) {
+            console.error(`Errore nel recupero dei dettagli per il modello ${model.name}:`, error);
+            return { name: model.name, context_window: 4096 }; // Fallback in caso di errore
+        }
+    }));
+    return modelsWithContext;
 }
 
 // MODIFICATA: La funzione ora accetta il modello come argomento

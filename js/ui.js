@@ -16,6 +16,7 @@ export const dom = {
     modelNameSpan: document.getElementById('model-name-span'),
     toggleSidebarBtn: document.getElementById('toggle-sidebar-btn'),
     sidebarControls: document.querySelector('.sidebar-controls'),
+    cpuUsageText: document.getElementById('cpu-usage-text'), // Nuovo
 };
 
 
@@ -112,6 +113,13 @@ export function updateTokenUI(tokenCount, maxTokens) {
     else if (percentage < 75) dom.tokenProgressBarInner.style.backgroundColor = 'var(--color-yellow)';
     else if (percentage < 90) dom.tokenProgressBarInner.style.backgroundColor = 'var(--color-orange)';
     else dom.tokenProgressBarInner.style.backgroundColor = 'var(--color-red)';
+}
+
+// NUOVA FUNZIONE: Aggiorna l'interfaccia utente con l'utilizzo di CPU e RAM
+export function updateSystemInfoUI(cpuUsage) {
+    if (dom.cpuUsageText) {
+        dom.cpuUsageText.textContent = `CPU: ${cpuUsage}%`;
+    }
 }
 
 export function toggleLoading(isLoading) {
