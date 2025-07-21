@@ -306,7 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const files = e.dataTransfer.files;
         if (files.length > 0) {
-            state.clearAttachments(); // Clear existing attachments before adding new ones
+            
             let filesProcessed = 0;
             for (const file of files) {
                 if (file.type.startsWith('text/')) {
