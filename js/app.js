@@ -169,9 +169,24 @@ function handleCancelClick() {
 function estimateTokens(text) { return Math.ceil(text.length / 4); }
 
 function updateTotalTokenCount() {
-    const fullText = state.getCurrentChat().history.map(turn => turn.content).join(' ');
-    const tokenCount = estimateTokens(fullText);
-    const maxTokens = state.getContextWindowForModel(state.getCurrentModel()) || config.MAX_CONTEXT_WINDOW; // Usa il valore dinamico o il default
+    const currentPrompt = ui.dom.promptInput.value.trim();
+    const attachments = state.getAttachments();
+    
+    let combinedText = state.getCurrentChat().history.map(turn => turn.content).join(' ');
+    
+    if (currentPrompt) {
+        combinedText += ` ${currentPrompt}`;
+    }
+
+    if (attachments.length > 0) {
+        const attachmentsContent = attachments
+            .map(file => file.content)
+            .join(' ');
+        combinedText += ` ${attachmentsContent}`;
+    }
+
+    const tokenCount = estimateTokens(combinedText);
+    const maxTokens = state.getContextWindowForModel(state.getCurrentModel()) || config.MAX_CONTEXT_WINDOW;
     console.log(`Token Count: ${tokenCount}, Max Tokens: ${maxTokens}, Current Model: ${state.getCurrentModel()}`);
     ui.updateTokenUI(tokenCount, maxTokens);
 }
@@ -224,6 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (promptInput) {
         promptInput.addEventListener('input', function() {
             autoResizeTextarea(this);
+            updateTotalTokenCount(); // Aggiorna il contatore dei token all'input
         });
         // Inizializza l'altezza corretta
         autoResizeTextarea(promptInput);
@@ -301,6 +317,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         filesProcessed++;
                         if (filesProcessed === files.length) {
                             ui.renderAttachments(state.getAttachments(), removeAttachment);
+                            updateTotalTokenCount(); // Update token count after adding attachments
                         }
                     };
                     reader.onerror = (error) => {
@@ -309,6 +326,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         filesProcessed++;
                         if (filesProcessed === files.length) {
                             ui.renderAttachments(state.getAttachments(), removeAttachment);
+                            updateTotalTokenCount(); // Update token count even on error
                         }
                     };
                     reader.readAsText(file);
@@ -317,6 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     filesProcessed++;
                     if (filesProcessed === files.length) {
                         ui.renderAttachments(state.getAttachments(), removeAttachment);
+                        updateTotalTokenCount(); // Update token count even if file is not supported
                     }
                 }
             }
@@ -339,4 +358,5 @@ function autoResizeTextarea(textarea) {
 function removeAttachment(fileName) {
     state.removeAttachment(fileName);
     ui.renderAttachments(state.getAttachments(), removeAttachment);
+    updateTotalTokenCount(); // Update token count after removing attachments
 }
