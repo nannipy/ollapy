@@ -201,3 +201,38 @@ document.addEventListener('DOMContentLoaded', init);
             ui.updateSystemInfoUI(info.cpu, info.ram);
         });
     }
+
+// Espansione automatica della textarea fino a 10 righe
+function autoResizeTextarea(textarea) {
+    textarea.style.height = 'auto';
+    const maxRows = 10;
+    const lineHeight = parseInt(window.getComputedStyle(textarea).lineHeight) || 20;
+    const maxHeight = lineHeight * maxRows;
+    textarea.style.height = Math.min(textarea.scrollHeight, maxHeight) + 'px';
+    textarea.style.overflowY = textarea.scrollHeight > maxHeight ? 'auto' : 'hidden';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const promptInput = document.getElementById('prompt-input');
+    if (promptInput) {
+        promptInput.addEventListener('input', function() {
+            autoResizeTextarea(this);
+        });
+        // Inizializza l'altezza corretta
+        autoResizeTextarea(promptInput);
+
+        // Gestione invio con Command+Enter e nuova riga con Enter
+        promptInput.addEventListener('keydown', function(e) {
+            // Su Mac: metaKey è il tasto Command
+            if (e.key === 'Enter' && e.metaKey) {
+                e.preventDefault();
+                // Trova il form e invia
+                const form = document.getElementById('chat-form');
+                if (form) form.requestSubmit();
+            } else if (e.key === 'Enter' && !e.shiftKey && !e.metaKey) {
+                // Solo Enter: va a capo normalmente (default comportamento textarea)
+                // Non faccio nulla, lascio il comportamento di default
+            }
+        });
+    }
+});

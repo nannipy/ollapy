@@ -51,11 +51,11 @@
                     </div>
                 </div>
                 <form id="chat-form">
-                    <input type="text" id="prompt-input" placeholder="Scrivi il tuo messaggio..." autocomplete="off">
+                    <textarea id="prompt-input" placeholder="Scrivi il tuo messaggio..." autocomplete="off" rows="1" style="resize: none; overflow-y: auto; max-height: 220px;"></textarea>
                     <button type="submit" id="send-button">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
                     </button>
-                    <button type="button" id="cancel-button" style="display: none;">Annulla</button>
+                    <button type="button" id="cancel-button" style="display: none; border-radius: 100%;">Annulla</button>
                 </form>
             </div>
         </div>

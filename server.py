@@ -1,5 +1,6 @@
 import os
 import json
+import sys
 from flask import Flask, request, jsonify, send_from_directory # type: ignore
 from flask import Response # type: ignore
 
@@ -89,6 +90,9 @@ def delete_chat(chat_id):
 
 # Avvia il server
 if __name__ == '__main__':
-    print("Avvio del server Flask su http://localhost:8001")
+    # Leggi la porta dalla riga di comando, con 8001 come default
+    port = int(sys.argv[1]) if len(sys.argv) > 1 else 8001
+    
+    print(f"Avvio del server Flask su http://localhost:{port}")
     print("Questo server gestisce l'interfaccia e salva/carica le chat.")
-    app.run(host='0.0.0.0', port=8001)
+    app.run(host='127.0.0.1', port=port)

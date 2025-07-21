@@ -138,6 +138,9 @@ export function clearChatLog() {
 
 export function clearPromptInput() {
     dom.promptInput.value = '';
+    // Resetto anche l'altezza della textarea
+    dom.promptInput.style.height = 'auto';
+    dom.promptInput.style.overflowY = 'hidden';
 }
 
 export function scrollToBottom() {

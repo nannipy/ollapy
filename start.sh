@@ -34,13 +34,20 @@ if ! command -v ollama &> /dev/null; then
     exit 1
 fi
 
-# --- Avvio dei Server ---
-echo "1. Avvio del server Ollama in background..."
-OLLAMA_ORIGINS="*" ollama serve &
-ollama_pid=$!
+# --- Controlla se Ollama è già in esecuzione ---
+if pgrep -f "ollama serve" > /dev/null; then
+    echo "Ollama è già in esecuzione."
+else
+    echo "1. Avvio del server Ollama in background..."
+    OLLAMA_ORIGINS="*" ollama serve &
+    ollama_pid=$!
+    echo "  - Ollama PID: $ollama_pid"
+    sleep 3 # Diamo a Ollama il tempo di avviarsi
+fi
 
+# --- Avvio dei Server ---
 echo "2. Avvio del web server Flask (che serve l'UI e gestisce i log) sulla porta $PORT..."
-python3 $SERVER_FILE &
+python3 $SERVER_FILE $PORT &
 server_pid=$!
 
 echo -e "\nServer avviati con successo:"
