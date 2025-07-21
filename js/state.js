@@ -64,7 +64,11 @@ export function getContextWindowForModel(modelName) {
 let attachments = []; // Array per gli allegati
 
 export function getAttachments() { return attachments; }
-export function addAttachment(file) { attachments.push(file); }
+export function addAttachment(file) {
+    if (!attachments.some(existingFile => existingFile.name === file.name)) {
+        attachments.push(file);
+    }
+}
 export function removeAttachment(fileName) {
     attachments = attachments.filter(file => file.name !== fileName);
 }
