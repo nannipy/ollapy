@@ -60,3 +60,12 @@ export function setModelContextWindows(models) {
 export function getContextWindowForModel(modelName) {
     return state.modelContextWindows[modelName];
 }
+
+let attachments = []; // Array per gli allegati
+
+export function getAttachments() { return attachments; }
+export function addAttachment(file) { attachments.push(file); }
+export function removeAttachment(fileName) {
+    attachments = attachments.filter(file => file.name !== fileName);
+}
+export function clearAttachments() { attachments = []; }

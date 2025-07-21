@@ -38,6 +38,8 @@ async function loadChat(chatId) {
 async function startNewChat() {
     state.resetState();
     ui.clearChatLog();
+    state.clearAttachments();
+    ui.clearAttachmentsUI();
     await refreshHistoryList();
     updateTotalTokenCount();
 }
@@ -54,12 +56,28 @@ async function deleteChat(chatId) {
 
 async function handleFormSubmit(event) {
     event.preventDefault();
-    const userPrompt = ui.dom.promptInput.value.trim();
-    if (!userPrompt) return;
+
+    let userPrompt = ui.dom.promptInput.value.trim();
+    const attachments = state.getAttachments();
+
+    if (!userPrompt && attachments.length === 0) return;
+
+    // Aggiungi il contenuto degli allegati al prompt
+    if (attachments.length > 0) {
+        const attachmentsContent = attachments
+            .map(file => `--- ALLEGATO: ${file.name} ---\n${file.content}`)
+            .join('\n\n');
+        userPrompt = userPrompt 
+            ? `${userPrompt}\n\n${attachmentsContent}`
+            : attachmentsContent;
+    }
 
     const startTime = performance.now();
     ui.clearPromptInput();
+    state.clearAttachments();
+    ui.clearAttachmentsUI();
     ui.toggleLoading(true);
+
 
     if (!state.getActiveChatId()) {
         const newChatId = Date.now().toString();
@@ -173,7 +191,6 @@ async function init() {
     ui.dom.form.addEventListener('submit', handleFormSubmit);
     ui.dom.newChatBtn.addEventListener('click', startNewChat);
     ui.dom.modelSelector.addEventListener('change', handleModelChange);
-    ui.dom.toggleSidebarBtn.addEventListener('click', ui.toggleSidebar);
     ui.dom.cancelButton.addEventListener('click', handleCancelClick); // Listener per il pulsante Annulla
 
     // Popola il selettore dei modelli
@@ -193,7 +210,8 @@ async function init() {
 }
 
 // Esegui l'inizializzazione solo quando il DOM è pronto.
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', () => {
+    init();
 
     // Ascolta gli eventi di sistema dal processo principale
     if (window.electronAPI) {
@@ -202,17 +220,6 @@ document.addEventListener('DOMContentLoaded', init);
         });
     }
 
-// Espansione automatica della textarea fino a 10 righe
-function autoResizeTextarea(textarea) {
-    textarea.style.height = 'auto';
-    const maxRows = 10;
-    const lineHeight = parseInt(window.getComputedStyle(textarea).lineHeight) || 20;
-    const maxHeight = lineHeight * maxRows;
-    textarea.style.height = Math.min(textarea.scrollHeight, maxHeight) + 'px';
-    textarea.style.overflowY = textarea.scrollHeight > maxHeight ? 'auto' : 'hidden';
-}
-
-document.addEventListener('DOMContentLoaded', () => {
     const promptInput = document.getElementById('prompt-input');
     if (promptInput) {
         promptInput.addEventListener('input', function() {
@@ -235,4 +242,101 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    const toggleBtn = document.getElementById('toggle-sidebar-btn');
+    const sidebar = document.querySelector('.sidebar-controls');
+    const appLayout = document.querySelector('.app-layout');
+
+    if (toggleBtn && sidebar && appLayout) {
+        toggleBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+            appLayout.classList.toggle('sidebar-collapsed');
+        });
+    }
+
+    const chatContainer = document.querySelector('.chat-container');
+    const dropZone = document.getElementById('drop-zone');
+
+    let dragCounter = 0;
+
+    chatContainer.addEventListener('dragenter', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dragCounter++;
+        if (e.dataTransfer.items && e.dataTransfer.items.length > 0) {
+            chatContainer.classList.add('drag-over');
+        }
+    });
+
+    chatContainer.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dragCounter--;
+        if (dragCounter === 0) {
+            chatContainer.classList.remove('drag-over');
+        }
+    });
+
+    chatContainer.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+    });
+
+    chatContainer.addEventListener('drop', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dragCounter = 0;
+        chatContainer.classList.remove('drag-over');
+
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            state.clearAttachments(); // Clear existing attachments before adding new ones
+            let filesProcessed = 0;
+            for (const file of files) {
+                if (file.type.startsWith('text/')) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        const fileContent = event.target.result;
+                        state.addAttachment({ name: file.name, content: fileContent });
+                        filesProcessed++;
+                        if (filesProcessed === files.length) {
+                            ui.renderAttachments(state.getAttachments(), removeAttachment);
+                        }
+                    };
+                    reader.onerror = (error) => {
+                        console.error("Errore nella lettura del file:", error);
+                        alert("Impossibile leggere il file.");
+                        filesProcessed++;
+                        if (filesProcessed === files.length) {
+                            ui.renderAttachments(state.getAttachments(), removeAttachment);
+                        }
+                    };
+                    reader.readAsText(file);
+                } else {
+                    alert(`File non supportato: ${file.name}. Puoi allegare solo file di testo.`);
+                    filesProcessed++;
+                    if (filesProcessed === files.length) {
+                        ui.renderAttachments(state.getAttachments(), removeAttachment);
+                    }
+                }
+            }
+        }
+    });
 });
+
+// Espansione automatica della textarea fino a 10 righe
+function autoResizeTextarea(textarea) {
+    textarea.style.height = 'auto';
+    const maxRows = 10;
+    const lineHeight = parseInt(window.getComputedStyle(textarea).lineHeight) || 20;
+    const maxHeight = lineHeight * maxRows;
+    textarea.style.height = Math.min(textarea.scrollHeight, maxHeight) + 'px';
+    textarea.style.overflowY = textarea.scrollHeight > maxHeight ? 'auto' : 'hidden';
+}
+
+
+
+function removeAttachment(fileName) {
+    state.removeAttachment(fileName);
+    ui.renderAttachments(state.getAttachments(), removeAttachment);
+}

@@ -1,7 +1,7 @@
 :root {
     --background-color: #09090B; --sidebar-color: #131316; --container-color: #18181B;
     --text-color: #F4F4F5; --text-color-muted: #A1A1AA; --input-bg-color: #18181B;
-    --border-color: #232329; --accent-color: #4a90e2; --user-msg-bg: #18181B;
+    --border-color: #232329; --accent-color: #4a90e2; --user-msg-bg: white;
     --ai-msg-bg: #131316; --hover-color: #232329; --color-green: #22c55e;
     --color-yellow: #eab308; --color-orange: #f59e42; --color-red: #ef4444;
 }
@@ -41,7 +41,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helve
 }
 
 .app-layout.sidebar-collapsed .chat-container header {
-    justify-content: center;
+    justify-content: space-between;
 }
 
 #history-sidebar { 
@@ -65,14 +65,14 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helve
 #new-chat-btn {
     flex-grow: 1; 
     text-align: left;
-    margin-left: 15px
+    margin-left: 15px;
 }
 
 #toggle-sidebar-btn {
     background-color: transparent;
     color: var(--text-color);
     border: 1px solid var(--border-color);
-    border-radius: 8px;
+    border-radius: 12px;
     font-size: 15px;
     font-weight: 500;
     cursor: pointer;
@@ -92,7 +92,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helve
 #toggle-sidebar-btn:hover { background-color: var(--hover-color); border-color: #555; }
 
 .chat-container { flex-grow: 1; background-color: var(--container-color); display: flex; flex-direction: column; overflow: hidden; }
-#new-chat-btn { width: 100%; padding: 12px; background-color: transparent; color: var(--text-color); border: 1px solid var(--border-color); border-radius: 8px; font-size: 15px; font-weight: 500; cursor: pointer; transition: background-color 0.2s, border-color 0.2s; text-align: left; }
+#new-chat-btn { width: 100%; padding: 12px; background-color: transparent; color: var(--text-color); border: 1px solid var(--border-color); border-radius: 12px; font-size: 15px; font-weight: 500; cursor: pointer; transition: background-color 0.2s, border-color 0.2s; text-align: left; }
 #new-chat-btn:hover { background-color: var(--hover-color); border-color: #555; }
 #chat-history-list { list-style: none; padding: 0; margin: 0; overflow-y: auto; flex-grow: 1; }
 
@@ -147,8 +147,8 @@ h1 span { font-weight: 300; opacity: 0.7; }
 #chat-log::-webkit-scrollbar { width: 6px; }
 #chat-log::-webkit-scrollbar-track { background: transparent; }
 #chat-log::-webkit-scrollbar-thumb { background-color: var(--border-color); border-radius: 20px; }
-.message { max-width: 85%; padding: 12px 18px; border-radius: 18px; line-height: 1.2; white-space: pre-wrap; word-wrap: break-word; }
-.user-message { background-color: var(--user-msg-bg); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+.message { max-width: 85%; padding: 12px 18px; border-radius: 18px; line-height: 1.2; white-space: pre-wrap; word-wrap: break-word; background-color: var(--user-msg-bg); }
+.user-message { background-color: var(--user-msg-bg); color: black; align-self: flex-end; border-bottom-right-radius: 4px; }
 .ai-message { background-color: var(--ai-msg-bg); align-self: flex-start; border-bottom-left-radius: 4px; }
 .ai-message .cursor { display: inline-block; width: 8px; height: 1em; background-color: var(--text-color); animation: blink 1s step-end infinite; vertical-align: text-bottom; }
 @keyframes blink { from, to { background-color: transparent; } 50% { background-color: var(--text-color); } }
@@ -217,7 +217,7 @@ h1 span { font-weight: 300; opacity: 0.7; }
 }
 
 #token-count-text { font-size: 12px; color: var(--text-color-muted); text-align: right; }
-.token-progress-bar { width: 100%; height: 4px; background-color: var(--border-color); border-radius: 2px; overflow: hidden; }
+.token-progress-bar { width: 100%; height: 10px; background-color: var(--border-color); border-radius: 2px; overflow: hidden; }
 #token-progress-bar-inner { height: 100%; width: 0%; background-color: var(--color-green); border-radius: 2px; transition: width 0.5s ease, background-color 0.5s ease; }
 .response-time-info { display: block; margin-top: 10px; font-size: 11px; color: var(--text-color-muted); text-align: right; }
 
@@ -240,6 +240,81 @@ h1 span { font-weight: 300; opacity: 0.7; }
 .ai-message th, .ai-message td { border: 1px solid var(--border-color); padding: 8px; text-align: left; }
 .ai-message th { background-color: #444; }
 
+/* Stili per gli allegati */
+.attachment-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 0 24px 10px; /* Allineato con l'input */
+}
+
+.attachment-item {
+    background-color: var(--border-color);
+    border-radius: 12px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    max-width: 200px;
+}
+
+.attachment-item .file-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+.attachment-item .file-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.attachment-item .remove-attachment-btn {
+    background: none;
+    border: none;
+    color: var(--text-color-muted);
+    cursor: pointer;
+    padding: 2px;
+    font-size: 16px;
+    line-height: 1;
+}
+
+.attachment-item .remove-attachment-btn:hover {
+    color: var(--text-color);
+}
+
+/* Stili per la drop zone */
+
+/* Stili per la drop zone */
+#drop-zone {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    border: 2px dashed var(--accent-color);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000; /* Assicura che sia sopra gli altri elementi */
+    pointer-events: none; /* Ignora gli eventi del mouse di default */
+}
+
+.drop-zone-text {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.chat-container.drag-over #drop-zone {
+    display: flex;
+    pointer-events: all; /* Abilita gli eventi quando il drag è attivo */
+}
+
 /* STILI PER IL SELETTORE DI MODELLO */
 
 .model-selector-container {
@@ -255,8 +330,8 @@ h1 span { font-weight: 300; opacity: 0.7; }
 
 #model-selector {
     border: 1px solid var(--border-color);
-    border-radius: 6px;
-    padding: 6px 10px;
+    border-radius: 12px;
+    padding: 10px 10px;
     font-size: 14px;
     outline: none;
     cursor: pointer;
@@ -293,4 +368,8 @@ h1 span { font-weight: 300; opacity: 0.7; }
     border-radius: 4px;
     flex-shrink: 0; /* Impedisce al tag di rimpicciolirsi */
     font-weight: 500;
+}
+
+.app-layout.sidebar-collapsed .model-selector-container {
+    justify-content: flex-end !important;
 }

@@ -17,6 +17,7 @@ export const dom = {
     toggleSidebarBtn: document.getElementById('toggle-sidebar-btn'),
     sidebarControls: document.querySelector('.sidebar-controls'),
     cpuUsageText: document.getElementById('cpu-usage-text'), // Nuovo
+    attachmentContainer: document.getElementById('attachment-container'), // Aggiunto
 };
 
 
@@ -149,4 +150,53 @@ export function scrollToBottom() {
 
 export function toggleSidebar() {
     dom.sidebarControls.classList.toggle('collapsed');
+}
+
+// --- FUNZIONI PER GLI ALLEGATI ---
+
+export function renderAttachments(attachments, onRemove) {
+    const container = dom.attachmentContainer;
+    if (!container) return;
+
+    container.innerHTML = ''; // Pulisce i vecchi allegati
+
+    attachments.forEach(file => {
+        const item = document.createElement('div');
+        item.className = 'attachment-item';
+        item.dataset.fileName = file.name;
+
+        // Icona generica del file
+        const icon = document.createElement('span');
+        icon.className = 'file-icon';
+        icon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v5h5v11H6z"/></svg>`;
+
+        // Nome del file
+        const name = document.createElement('span');
+        name.className = 'file-name';
+        name.textContent = file.name;
+        name.title = file.name;
+
+        // Pulsante di rimozione
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'remove-attachment-btn';
+        removeBtn.innerHTML = '&times;'; // Carattere "x"
+        removeBtn.onclick = () => onRemove(file.name);
+
+        item.appendChild(icon);
+        item.appendChild(name);
+        item.appendChild(removeBtn);
+
+        container.appendChild(item);
+    });
+
+    // Mostra o nascondi il contenitore
+    container.style.display = attachments.length > 0 ? 'flex' : 'none';
+}
+
+export function clearAttachmentsUI() {
+    const container = dom.attachmentContainer;
+    if (container) {
+        container.innerHTML = '';
+        container.style.display = 'none';
+    }
 }
