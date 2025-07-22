@@ -4,7 +4,6 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const { spawn, exec } = require('child_process'); // Importa exec
 const os = require('os'); // Importa il modulo os
-const http = require('http'); // Importa il modulo http
 
 let flaskProcess = null;
 let mainWindow = null; // Riferimento alla finestra principale
@@ -35,28 +34,28 @@ function createWindow() {
   // mainWindow.webContents.openDevTools();
 
   // Invia l'utilizzo di CPU e RAM al renderer ogni secondo
-  setInterval(() => {
-    http.get('http://localhost:8001/system_info', (res) => {
-      let data = '';
-      res.on('data', (chunk) => {
-        data += chunk;
+  setInterval(async () => { // Rendi la funzione async
+    const currentCpuInfo = os.cpus().map(cpu => cpu.times);
+    let totalIdle = 0;
+    let totalTick = 0;
+
+    for (let i = 0; i < currentCpuInfo.length; i++) {
+      const idleDifference = currentCpuInfo[i].idle - previousCpuInfo[i].idle;
+      const totalDifference = Object.values(currentCpuInfo[i]).reduce((acc, val) => acc + val, 0) - Object.values(previousCpuInfo[i]).reduce((acc, val) => acc + val, 0);
+
+      totalIdle += idleDifference;
+      totalTick += totalDifference;
+    }
+
+    const cpuUsage = 100 - (100 * totalIdle / totalTick);
+    previousCpuInfo = currentCpuInfo; // Aggiorna per il prossimo ciclo
+
+
+    if (mainWindow && mainWindow.webContents) {
+      mainWindow.webContents.send('system-info', {
+        cpu: cpuUsage.toFixed(2)
       });
-      res.on('end', () => {
-        try {
-          const info = JSON.parse(data);
-          if (mainWindow && mainWindow.webContents) {
-            mainWindow.webContents.send('system-info', {
-              cpu: info.cpu.toFixed(2),
-              ram: info.ram.toFixed(2)
-            });
-          }
-        } catch (error) {
-          console.error('Error parsing system info:', error);
-        }
-      });
-    }).on('error', (err) => {
-      console.error('Error fetching system info:', err.message);
-    });
+    }
   }, 1000);
 }
 
@@ -118,6 +117,6 @@ app.on('window-all-closed', () => {
   }
   // Kill the Flask process when the app closes
   if (flaskProcess) {
-    flaskProcess.kill('SIGKILL');
+    flaskProcess.kill();
   }
 });

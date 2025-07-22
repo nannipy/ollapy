@@ -1,7 +1,6 @@
 import os
 import json
 import sys
-import psutil # Import psutil
 from flask import Flask, request, jsonify, send_from_directory # type: ignore
 from flask import Response # type: ignore
 
@@ -90,14 +89,6 @@ def delete_chat(chat_id):
     return jsonify({"error": "Chat non trovata"}), 404
 
 # Avvia il server
-@app.route('/system_info')
-def system_info():
-    cpu_percent = psutil.cpu_percent(interval=1)
-    ram_info = psutil.virtual_memory()
-    ram_remaining_percent = 100 - ram_info.percent
-    return jsonify({'cpu': cpu_percent, 'ram': ram_remaining_percent})
-
-
 if __name__ == '__main__':
     # Leggi la porta dalla riga di comando, con 8001 come default
     port = int(sys.argv[1]) if len(sys.argv) > 1 else 8001
