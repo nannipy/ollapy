@@ -271,12 +271,29 @@ h1 span { font-weight: 300; opacity: 0.7; }
 .response-time-info { display: block; margin-top: 10px; font-size: 11px; color: var(--text-color-muted); text-align: right; }
 
 .system-info-container {
-    flex-basis: 25%; /* 1/4 della riga */
-    flex-shrink: 0; /* Impedisce di rimpicciolirsi */
     display: flex;
-    margin-right: 5px;
+    justify-content: flex-end; /* Allinea a destra */
+    align-items: center;
+    padding-bottom: 12px;
+    gap: 20px;
     font-size: 12px;
     color: var(--text-color-muted);
+}
+
+.cpu-info, .ram-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.cpu-info .label, .ram-info .label {
+    font-size: 10px;
+    color: var(--text-color-muted);
+}
+
+.cpu-info span, .ram-info span {
+    font-size: 14px;
+    font-weight: bold;
 }
 
 /* --- STILI PER IL MARKDOWN RENDERIZZATO --- */
