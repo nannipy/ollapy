@@ -69,3 +69,72 @@ graph TD
     git clone https://github.com/your-username/ollapy.git
     cd ollapy
     ```
+2.  **Run the start script:**
+
+    The `start.sh` script automates the setup process, including installing dependencies and launching the necessary servers.
+
+    ```bash
+    ./start.sh
+    ```
+
+    This will:
+    *   Install the required Python packages from `requirements.txt`.
+    *   Start the Ollama server in the background.
+    *   Start the Flask backend server.
+    *   Open the OllaPy web interface in your default browser.
+
+3.  **Start chatting!**
+
+    You can now interact with your local language models through the OllaPy interface.
+
+### Desktop Application (Electron)
+
+OllaPy can also be run as a desktop application using Electron, providing a native-like experience.
+
+1.  **Install Node.js dependencies:**
+
+    ```bash
+    npm install
+    ```
+
+2.  **Start the Electron application:**
+
+    ```bash
+    npm start
+    ```
+
+    This will launch the OllaPy desktop application. Ensure your Ollama server is running in the background.
+
+    **Note:** The Electron application currently expects the Flask backend to be running separately. You can start it using `./start.sh` (which also starts Ollama) or by manually running `python server.py` in a separate terminal.
+
+
+
+## ⚙️ Configuration
+
+To customize the default settings, such as the default Ollama model or the Ollama server URL, you can modify the `js/config.js` file:
+
+```javascript
+// js/config.js
+export const DEFAULT_OLLAMA_MODEL = "gemma3"; // Set your preferred default model
+export const OLLAMA_BASE_URL = "http://localhost:11434"; // Modify if your Ollama server runs on a different URL
+```
+
+## 🤓 API Endpoints
+
+The Flask backend exposes a simple REST API for managing chat logs:
+
+*   `GET /api/chats`: Retrieves a list of all saved chats.
+*   `GET /api/chats/<chat_id>`: Retrieves the content of a specific chat.
+*   `POST /api/chats`: Saves or updates a chat.
+*   `DELETE /api/chats/<chat_id>`: Deletes a specific chat.
+
+## 🤝 Contributing
+
+Contributions are welcome! If you have any ideas for improvements or new features, feel free to fork the repository, make your changes, and submit a pull request.
+
+Some ideas for contributions include:
+
+*   Implementing a more advanced chat history with folders and search functionality.
+*   Adding support for different themes (e.g., light, dark, cyberpunk).
+*   Adding the ability to export chats as Markdown or PDF files.
+
