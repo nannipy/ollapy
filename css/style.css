@@ -200,6 +200,55 @@ h1 span { font-weight: 300; opacity: 0.7; }
 }
 #send-button:hover:not(:disabled) { background-color: var(--text-color-muted); }
 #send-button:disabled { background-color: #555; cursor: not-allowed; }
+
+.prompt-input-wrapper {
+    flex-grow: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+#prompt-input {
+    flex-grow: 1;
+    padding: 18px 24px 18px 60px; /* Spazio per il bottone di allegato */
+    background-color: var(--border-color);
+    color: var(--text-color);
+    border: var(--border-color);
+    border-radius: 18px;
+    font-size: 18px;
+    outline: none;
+    box-shadow: 0 2px 8px 0 rgba(0,0,0,0.10);
+    transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+#attach-button {
+    position: absolute;
+    left: 10px; /* Posiziona a destra all'interno del wrapper */
+    background-color: white; /* Colore neutro */
+    color: var(--background-color); /* Colore del testo/icona */
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    z-index: 1; /* Assicura che sia sopra la textarea */
+}
+
+#attach-button svg {
+    width: 20px;
+    height: 20px;
+}
+
+#attach-button:hover { background-color: #71717A; /* Un grigio leggermente più scuro al hover */ }
+
+#prompt-input:focus {
+    box-shadow: 0 0 0 2px var(--hover-color);
+    border: none;
+}
 .metrics-container {
     display: flex;
     justify-content: space-between; /* Spazia gli elementi */

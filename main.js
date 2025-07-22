@@ -17,20 +17,20 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1000,
     height: 800,
+    icon: path.join(__dirname, 'ollapy-icon.png'),
     webPreferences: {
-      preload: (() => {
-        const preloadPath = path.join(__dirname, 'preload.js');
-        console.log(`Preload script path: ${preloadPath}`);
-        return preloadPath;
-      })(),
-      nodeIntegration: false, // Imposta a false per sicurezza
-      contextIsolation: true, // Imposta a true per sicurezza
-    },
-  });
+      preload: path.join(__dirname, 'preload.js')
+    }
+    });
 
-  mainWindow.loadURL('http://localhost:8001');
+    if (os.platform() === 'darwin') {
+      app.dock.setIcon(path.join(__dirname, 'ollapy-icon.png'));
+    }
 
-  // Open the DevTools.
+
+    mainWindow.loadURL('http://localhost:8001');
+
+    // Open the DevTools.
   // mainWindow.webContents.openDevTools();
 
   // Invia l'utilizzo di CPU e RAM al renderer ogni secondo

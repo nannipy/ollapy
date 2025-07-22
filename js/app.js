@@ -207,6 +207,8 @@ async function init() {
     ui.dom.newChatBtn.addEventListener('click', startNewChat);
     ui.dom.modelSelector.addEventListener('change', handleModelChange);
     ui.dom.cancelButton.addEventListener('click', handleCancelClick); // Listener per il pulsante Annulla
+    ui.dom.attachButton.addEventListener('click', () => ui.dom.fileInput.click()); // Trigger click on hidden file input
+    ui.dom.fileInput.addEventListener('change', handleFileInputChange); // Handle file selection
 
     // Popola il selettore dei modelli
     try {
@@ -314,11 +316,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     reader.onload = (event) => {
                         const fileContent = event.target.result;
                         state.addAttachment({ name: file.name, content: fileContent });
+                        ui.renderAttachments(state.getAttachments(), removeAttachment);
+                        updateTotalTokenCount();
                         filesProcessed++;
-                        if (filesProcessed === files.length) {
-                            ui.renderAttachments(state.getAttachments(), removeAttachment);
-                            updateTotalTokenCount(); // Update token count after adding attachments
-                        }
                     };
                     reader.onerror = (error) => {
                         console.error("Errore nella lettura del file:", error);
@@ -359,4 +359,42 @@ function removeAttachment(fileName) {
     state.removeAttachment(fileName);
     ui.renderAttachments(state.getAttachments(), removeAttachment);
     updateTotalTokenCount(); // Update token count after removing attachments
+}
+
+async function handleFileInputChange(event) {
+    const files = event.target.files;
+    if (files.length > 0) {
+        let filesProcessed = 0;
+        for (const file of files) {
+            if (file.type.startsWith('text/')) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const fileContent = e.target.result;
+                    state.addAttachment({ name: file.name, content: fileContent });
+                    ui.renderAttachments(state.getAttachments(), removeAttachment);
+                    updateTotalTokenCount();
+                    filesProcessed++;
+                };
+                reader.onerror = (error) => {
+                    console.error("Errore nella lettura del file:", error);
+                    alert("Impossibile leggere il file.");
+                    filesProcessed++;
+                    if (filesProcessed === files.length) {
+                        ui.renderAttachments(state.getAttachments(), removeAttachment);
+                        updateTotalTokenCount();
+                    }
+                };
+                reader.readAsText(file);
+            } else {
+                alert(`File non supportato: ${file.name}. Puoi allegare solo file di testo.`);
+                filesProcessed++;
+                if (filesProcessed === files.length) {
+                    ui.renderAttachments(state.getAttachments(), removeAttachment);
+                    updateTotalTokenCount();
+                }
+            }
+        }
+    }
+    // Clear the input so the same file can be selected again if needed
+    event.target.value = '';
 }

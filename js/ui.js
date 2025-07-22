@@ -18,6 +18,8 @@ export const dom = {
     sidebarControls: document.querySelector('.sidebar-controls'),
     cpuUsageText: document.getElementById('cpu-usage-text'), // Nuovo
     attachmentContainer: document.getElementById('attachment-container'), // Aggiunto
+    fileInput: document.getElementById('file-input'), // Aggiunto
+    attachButton: document.getElementById('attach-button'), // Aggiunto
 };
 
 
