@@ -2,7 +2,8 @@
     <img src="ollapy-icon.png" alt="Ollapy Logo" width="180" />
 </p>
 
-# OllaPy: A Private, Self-Hosted Web Interface for Ollama
+<h1>OllaPy <br>Private, Self-Hosted Web Interface for Ollama</br></h1>
+
 
 [![Python](https://img.shields.io/badge/Python-3.x-blue.svg)](https://www.python.org/) [![Flask](https://img.shields.io/badge/Flask-2.x-black.svg)](https://flask.palletsprojects.com/) [![JavaScript](https://img.shields.io/badge/JavaScript-ES6-yellow.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
