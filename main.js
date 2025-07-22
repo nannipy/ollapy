@@ -17,7 +17,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1000,
     height: 800,
-    icon: path.join(__dirname, 'ollapy-icon.png'),
+    icon: path.join(__dirname, 'ollapy.png'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
     }

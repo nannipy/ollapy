@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="logo_ollapy.svg" alt="Ollapy Logo" width="180" />
+    <img src="ollapy-icon.png" alt="Ollapy Logo" width="180" />
 </p>
 
 # OllaPy: A Private, Self-Hosted Web Interface for Ollama
