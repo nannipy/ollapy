@@ -16,7 +16,8 @@ export const dom = {
     modelNameSpan: document.getElementById('model-name-span'),
     toggleSidebarBtn: document.getElementById('toggle-sidebar-btn'),
     sidebarControls: document.querySelector('.sidebar-controls'),
-    cpuUsageText: document.getElementById('cpu-usage-text'), // Nuovo
+    cpuUsageText: document.getElementById('cpu-usage-text'),
+    ramUsageText: document.getElementById('ram-usage-text'),
     attachmentContainer: document.getElementById('attachment-container'), // Aggiunto
     fileInput: document.getElementById('file-input'), // Aggiunto
     attachButton: document.getElementById('attach-button'), // Aggiunto
@@ -119,10 +120,23 @@ export function updateTokenUI(tokenCount, maxTokens) {
 }
 
 // NUOVA FUNZIONE: Aggiorna l'interfaccia utente con l'utilizzo di CPU e RAM
-export function updateSystemInfoUI(cpuUsage) {
+export function updateSystemInfoUI(cpuUsage, ramUsage) {
     if (dom.cpuUsageText) {
-        dom.cpuUsageText.textContent = `CPU: ${cpuUsage}%`;
+        dom.cpuUsageText.textContent = `${cpuUsage}%`;
+        // CPU: 0% green (120 hue), 100% red (0 hue)
+        _applyColorGradient(dom.cpuUsageText, 100 - cpuUsage); // Invert for CPU
     }
+    if (dom.ramUsageText) {
+        dom.ramUsageText.textContent = `${ramUsage}%`;
+        // RAM: 0% red (0 hue), 100% green (120 hue)
+        _applyColorGradient(dom.ramUsageText, ramUsage);
+    }
+}
+
+function _applyColorGradient(element, percentage) {
+    // Calculate hue: 0 is red, 120 is green
+    const hue = percentage * 1.2; // Scales 0-100 to 0-120
+    element.style.color = `hsl(${hue}, 70%, 50%)`;
 }
 
 export function toggleLoading(isLoading) {
