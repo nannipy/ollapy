@@ -37,6 +37,12 @@ OllaPy is a sleek, self-contained web interface for interacting with local langu
 *   **🛑 Cancel Responses:** Interrupt the AI's response generation at any time.
 *   **🛡️ Built-in Security:** Client-side HTML sanitization using `DOMPurify` to prevent XSS attacks.
 
+## 🖼️ Screenshots
+
+<p align="center">
+    <img src="screenshot.png" alt="Ollapy Screenshot" width="80%" />
+</p>
+
 ## 🛠️ Architecture
 
 OllaPy's architecture is composed of two main components:
